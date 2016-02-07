@@ -128,7 +128,7 @@
                             <img src=<?php echo $row[resim1]; ?> alt="">
                             <div class="caption">
                                 <h4 class="pull-right"><?php echo number_format($row[fiyat],0,',','.'); ?>₺</h4>
-                                <h4><a href="#"><?php echo $row[isim]; ?></a>
+                                <h4><a href=<?php echo "index.php?show=".$row[ID]; ?>><?php echo $row[isim]; ?></a>
                                 </h4>
                                 <p>
                                 <?php 
@@ -167,7 +167,7 @@
                             <img src=<?php echo $row[resim1]; ?> alt="">
                             <div class="caption">
                                 <h4 class="pull-right"><?php echo number_format($row[fiyat],0,',','.'); ?>₺</h4>
-                                <h4><a href="#"><?php echo $row[isim]; ?></a>
+                                <h4><a href=<?php echo "index.php?show=".$row[ID]; ?>><?php echo $row[isim]; ?></a>
                                 </h4>
                                 <p>
                                 <?php 
@@ -190,12 +190,18 @@
 
             <?php 
 
-                } elseif (isset($_GET['show'])) { #ürün gösterme
+                } elseif (isset($_GET['show'])) { 
+
+
+                        $result = mysqli_query($sqlconn,"SELECT * FROM urunler WHERE ID=".$_GET[show]);
+
+                        while ($row = mysqli_fetch_array($result,MYSQL_ASSOC)) {                             
+            
 
             ?>
-            allah yok 
+            <?php echo $row[isim];?>
             <?php
-                }
+                }}
             ?>
         </div>
 
