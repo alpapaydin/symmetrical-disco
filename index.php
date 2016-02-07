@@ -1,5 +1,5 @@
 <html lang="en">
-    <?php 
+    <?php
         include 'connect.php';
     ?>
 <head>
@@ -40,7 +40,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Alpino Dizayn</a>
+                <a class="navbar-brand" href="index.php">Alpino Dizayn</a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -72,13 +72,17 @@
 
                         while ($row = mysqli_fetch_array($result,MYSQL_NUM)) {                             
                     ?>
-                    <a href="#" class="list-group-item"><?php echo $row[1]; ?></a>
+                    <a href=<?php echo "index.php?cat=".$row[0]; ?> class="list-group-item"><?php echo $row[1]; ?></a>
                     <?php
                             }
                     ?>
                 </div>
             </div>
+            <?php 
 
+                if ( !isset($_GET['cat']) && !isset($_GET['show']) ) {
+
+            ?>
             <div class="col-md-9">
 
                 <div class="row carousel-holder">
@@ -115,7 +119,7 @@
                 <div class="row">
                     <?php 
 
-                        $result = mysqli_query($sqlconn,"SELECT * FROM urunler");
+                        $result = mysqli_query($sqlconn,"SELECT * FROM urunler WHERE anasayfa=1");
 
                         while ($row = mysqli_fetch_array($result,MYSQL_ASSOC)) {                             
                     ?>
@@ -150,7 +154,49 @@
                 </div>
 
             </div>
+            <?php } elseif (isset($_GET['cat'])) { #kategoriye göre arama ?> 
+                <div class="row">
+                    <?php 
 
+                        $result = mysqli_query($sqlconn,"SELECT * FROM urunler WHERE kategoriid=".$_GET[cat]);
+
+                        while ($row = mysqli_fetch_array($result,MYSQL_ASSOC)) {                             
+                    ?>
+                    <div class="col-sm-4 col-lg-4 col-md-4">
+                        <div class="thumbnail">
+                            <img src=<?php echo $row[resim1]; ?> alt="">
+                            <div class="caption">
+                                <h4 class="pull-right"><?php echo number_format($row[fiyat],0,',','.'); ?>₺</h4>
+                                <h4><a href="#"><?php echo $row[isim]; ?></a>
+                                </h4>
+                                <p>
+                                <?php 
+                                echo substr($row[aciklama],0,101); 
+                                if (strlen($row[aciklama])>101) {
+                                    echo "...";
+                                } 
+                                ?>  
+                                </p>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <?php
+                            } 
+                    ?>
+
+                </div>
+
+            <?php 
+
+                } elseif (isset($_GET['show'])) { #ürün gösterme
+
+            ?>
+            allah yok 
+            <?php
+                }
+            ?>
         </div>
 
     </div>
