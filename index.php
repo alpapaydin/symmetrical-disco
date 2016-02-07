@@ -199,7 +199,63 @@
             
 
             ?>
-            <?php echo $row[isim];?>
+            <div class="col-md-9">
+                <div class="col-md-6">
+                    <div class="col-md-9">
+                        <div id="openModal" class="modalDialog">
+                            <div>
+                               <a href="#close" title="Kapat" class="close">X</a> 
+                                  <img src=<?php echo $row[resim1]; ?> >
+                            </div>
+                        </div>
+                        <div id="openModal2" class="modalDialog">
+                            <div>
+                               <a href="#close" title="Kapat" class="close">X</a> 
+                                  <img src=<?php echo $row[resim2]; ?> >
+                            </div>
+                        </div>
+                    <h3><?php echo $row[isim];?></h3>
+                    </div>
+                    <div class="col-md-3">
+                    <h3><?php echo number_format($row[fiyat],0,',','.'); ?>₺</h3>
+                    </div>
+                    <div class="col-md-12">
+                    <div class="well">
+                        <p><?php echo $row[aciklama];?></p>
+                    </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                            <ol class="carousel-indicators">
+                                <?php if (!is_null($row[resim2])) { ?>
+                                <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                                
+                                <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                                <?php } ?>
+                            </ol>
+                            <div class="carousel-inner">
+                                <div class="item active">
+                                    <a href="#openModal"><img class="slide-image" src=<?php echo $row[resim1]; ?> alt=""></a>
+                                </div>
+                                <?php if (!is_null($row[resim2])) { ?>
+                                <div class="item">
+                                    <a href="#openModal2"><img class="slide-image" src=<?php echo $row[resim2]; ?> alt=""></a>
+                                </div>
+                                <?php } ?>
+                            </div>
+                            <?php if (!is_null($row[resim2])) { ?>
+                            <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+                                <span class="glyphicon glyphicon-chevron-left"></span>
+                            </a>
+                            <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </a>
+                            <?php } ?>
+                        </div>
+                    </div>
+            </div>
+            
             <?php
                 }}
             ?>
