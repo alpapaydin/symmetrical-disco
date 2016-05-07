@@ -68,13 +68,22 @@
                 <div class="list-group">
                     <?php 
 
-                        $result = mysqli_query($sqlconn,"SELECT * FROM kategoriler");
+                        $result = mysqli_query($sqlconn,"SELECT * FROM kategoriler WHERE parentid is NULL");
 
                         while ($row = mysqli_fetch_array($result,MYSQL_NUM)) {                             
                     ?>
-                    <a href=<?php echo "index.php?cat=".$row[0]; ?> class="list-group-item"><?php echo $row[1]; ?></a>
+                            <a href=<?php echo "index.php?cat=".$row[0]; ?> class="list-group-item"><?php echo $row[1]; ?></a>
                     <?php
+                            $result2 = mysqli_query($sqlconn,"SELECT * FROM kategoriler WHERE parentid=".$row[0]);
+
+                            while ($row2 = mysqli_fetch_array($result2,MYSQL_NUM)) {
+                                ?>
+                            <a href=<?php echo "index.php?cat=".$row2[0]; ?> class="list-group-item"><?php echo "&#8226; ".$row2[1]; ?></a>
+                                <?php
                             }
+
+
+                        }
                     ?>
                 </div>
             </div>
@@ -125,15 +134,15 @@
                     ?>
                     <div class="col-sm-4 col-lg-4 col-md-4">
                         <div class="thumbnail">
-                            <img src=<?php echo $row[resim1]; ?> alt="">
+                            <img src=<?php echo "foto/".$row['ID']."/1.jpg" ?> alt="">
                             <div class="caption">
-                                <h4 class="pull-right"><?php echo number_format($row[fiyat],0,',','.'); ?>₺</h4>
-                                <h4><a href=<?php echo "index.php?show=".$row[ID]; ?>><?php echo $row[isim]; ?></a>
-                                </h4>
+                                <h4 class="pull-right"><?php echo number_format($row['fiyat'],0,',','.'); ?>₺</h4>
+                                <h4><a href=<?php echo "index.php?show=".$row['ID']; ?>><?php echo $row['isim']; ?></a>
+                                </h4>   
                                 <p>
                                 <?php 
-                                echo substr($row[aciklama],0,101); 
-                                if (strlen($row[aciklama])>101) {
+                                echo substr($row['aciklama'],0,101); 
+                                if (strlen($row['aciklama'])>101) {
                                     echo "...";
                                 } 
                                 ?>  
@@ -157,22 +166,22 @@
             <?php } elseif (isset($_GET['cat'])) { #kategoriye göre arama ?> 
                 <div class="row">
                     <?php 
-
-                        $result = mysqli_query($sqlconn,"SELECT * FROM urunler WHERE kategoriid=".$_GET[cat]);
+                        
+                        $result = mysqli_query($sqlconn,"SELECT * FROM urunler WHERE kategoriid IN ((SELECT id FROM kategoriler WHERE parentid=".$_GET['cat']."),".$_GET['cat'].")");
 
                         while ($row = mysqli_fetch_array($result,MYSQL_ASSOC)) {                             
                     ?>
                     <div class="col-sm-4 col-lg-4 col-md-4">
                         <div class="thumbnail">
-                            <img src=<?php echo $row[resim1]; ?> alt="">
+                            <img src=<?php echo "foto/".$row['ID']."/1.jpg" ?> alt="">
                             <div class="caption">
-                                <h4 class="pull-right"><?php echo number_format($row[fiyat],0,',','.'); ?>₺</h4>
-                                <h4><a href=<?php echo "index.php?show=".$row[ID]; ?>><?php echo $row[isim]; ?></a>
+                                <h4 class="pull-right"><?php echo number_format($row['fiyat'],0,',','.'); ?>₺</h4>
+                                <h4><a href=<?php echo "index.php?show=".$row['ID']; ?>><?php echo $row['isim']; ?></a>
                                 </h4>
                                 <p>
                                 <?php 
-                                echo substr($row[aciklama],0,101); 
-                                if (strlen($row[aciklama])>101) {
+                                echo substr($row['aciklama'],0,101); 
+                                if (strlen($row['aciklama'])>101) {
                                     echo "...";
                                 } 
                                 ?>  
@@ -193,7 +202,7 @@
                 } elseif (isset($_GET['show'])) { 
 
 
-                        $result = mysqli_query($sqlconn,"SELECT * FROM urunler WHERE ID=".$_GET[show]);
+                        $result = mysqli_query($sqlconn,"SELECT * FROM urunler WHERE ID=".$_GET['show']);
 
                         while ($row = mysqli_fetch_array($result,MYSQL_ASSOC)) {                             
             
@@ -205,23 +214,23 @@
                         <div id="openModal" class="modalDialog">
                             <div>
                                <a href="#close" title="Kapat" class="close">X</a> 
-                                  <img src=<?php echo $row[resim1]; ?> >
+                                  <img src=<?php echo $row['resim1']; ?> >
                             </div>
                         </div>
                         <div id="openModal2" class="modalDialog">
                             <div>
                                <a href="#close" title="Kapat" class="close">X</a> 
-                                  <img src=<?php echo $row[resim2]; ?> >
+                                  <img src=<?php echo $row['resim2']; ?> >
                             </div>
                         </div>
-                    <h3><?php echo $row[isim];?></h3>
+                    <h3><?php echo $row['isim'];?></h3>
                     </div>
                     <div class="col-md-3">
-                    <h3><?php echo number_format($row[fiyat],0,',','.'); ?>₺</h3>
+                    <h3><?php echo number_format($row['fiyat'],0,',','.'); ?>₺</h3>
                     </div>
                     <div class="col-md-12">
                     <div class="well">
-                        <p><?php echo $row[aciklama];?></p>
+                        <p><?php echo $row['aciklama'];?></p>
                     </div>
                     </div>
                 </div>
