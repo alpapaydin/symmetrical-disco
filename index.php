@@ -10,10 +10,13 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
+
     <title>Alpino Dizayn Mağaza Kataloğu</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/lightbox.css" type="text/css" media="screen" />
 
     <!-- Custom CSS -->
     <link href="css/shop-homepage.css" rel="stylesheet">
@@ -134,7 +137,7 @@
                     ?>
                     <div class="col-sm-4 col-lg-4 col-md-4">
                         <div class="thumbnail">
-                            <img src=<?php echo "foto/".$row['ID']."/1.jpg" ?> alt="">
+                            <a href=<?php echo "foto/".$row['ID']."/1.jpg" ?>  rel="lightbox"><img src=<?php echo "foto/".$row['ID']."/1.jpg" ?> alt=""></a>
                             <div class="caption">
                                 <h4 class="pull-right"><?php echo number_format($row['fiyat'],0,',','.'); ?>₺</h4>
                                 <h4><a href=<?php echo "index.php?show=".$row['ID']; ?>><?php echo $row['isim']; ?></a>
@@ -166,8 +169,20 @@
             <?php } elseif (isset($_GET['cat'])) { #kategoriye göre arama ?> 
                 <div class="row">
                     <?php 
+                        $subs = [];
+
+                        $result2 = mysqli_query($sqlconn,"SELECT * FROM kategoriler WHERE parentid=".$_GET['cat']);
                         
-                        $result = mysqli_query($sqlconn,"SELECT * FROM urunler WHERE kategoriid IN ((SELECT id FROM kategoriler WHERE parentid=".$_GET['cat']."),".$_GET['cat'].")");
+                        while ($row2 = mysqli_fetch_array($result2,MYSQL_ASSOC)) {
+                            $subs[] = $row2['id'];
+                        }
+                        
+                        if(empty($subs)){
+                        $query = "SELECT * FROM urunler WHERE kategoriid IN (".$_GET['cat'].")";
+                            }else{
+                                $query = "SELECT * FROM urunler WHERE kategoriid IN (".implode($subs,',').",".$_GET['cat'].")";
+                            }
+                        $result = mysqli_query($sqlconn,$query);
 
                         while ($row = mysqli_fetch_array($result,MYSQL_ASSOC)) {                             
                     ?>
@@ -211,18 +226,6 @@
             <div class="col-md-9">
                 <div class="col-md-6">
                     <div class="col-md-9">
-                        <div id="openModal" class="modalDialog">
-                            <div>
-                               <a href="#close" title="Kapat" class="close">X</a> 
-                                  <img src=<?php echo $row['resim1']; ?> >
-                            </div>
-                        </div>
-                        <div id="openModal2" class="modalDialog">
-                            <div>
-                               <a href="#close" title="Kapat" class="close">X</a> 
-                                  <img src=<?php echo $row['resim2']; ?> >
-                            </div>
-                        </div>
                     <h3><?php echo $row['isim'];?></h3>
                     </div>
                     <div class="col-md-3">
@@ -236,31 +239,29 @@
                 </div>
                 <div class="col-md-6">
                         <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-                            <ol class="carousel-indicators">
-                                <?php if (!is_null($row[resim2])) { ?>
-                                <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-                                
-                                <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-                                <?php } ?>
-                            </ol>
+
                             <div class="carousel-inner">
                                 <div class="item active">
-                                    <a href="#openModal"><img class="slide-image" src=<?php echo $row[resim1]; ?> alt=""></a>
+                                    <a href=<?php echo "foto/".$row['ID']."/1.jpg" ?>  rel="lightbox"><img class="slide-image" src=<?php echo "foto/".$row['ID']."/1.jpg" ?>  alt=""></a>
                                 </div>
-                                <?php if (!is_null($row[resim2])) { ?>
+                                <?php if(file_exists("foto/".$row['ID']."/2.jpg")) { ?>
                                 <div class="item">
-                                    <a href="#openModal2"><img class="slide-image" src=<?php echo $row[resim2]; ?> alt=""></a>
+                                    <a href=<?php echo "foto/".$row['ID']."/2.jpg" ?>  rel="lightbox"><img class="slide-image" src=<?php echo "foto/".$row['ID']."/2.jpg" ?>  alt=""></a>
                                 </div>
+                                <?php } else {?>
+                                <div class="item">
+                                    <a href=<?php echo "foto/".$row['ID']."/1.jpg" ?>  rel="lightbox"><img class="slide-image" src=<?php echo "foto/".$row['ID']."/1.jpg" ?>  alt=""></a>
+                                </div>  
                                 <?php } ?>
                             </div>
-                            <?php if (!is_null($row[resim2])) { ?>
+                            
                             <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
                                 <span class="glyphicon glyphicon-chevron-left"></span>
                             </a>
                             <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
                                 <span class="glyphicon glyphicon-chevron-right"></span>
                             </a>
-                            <?php } ?>
+                            
                         </div>
                     </div>
             </div>
@@ -294,7 +295,9 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
-
+    <script type="text/javascript" src="js/prototype.js"></script>
+    <script type="text/javascript" src="js/scriptaculous.js?load=effects"></script>
+    <script type="text/javascript" src="js/lightbox.js"></script>
 </body>
 
 </html>
