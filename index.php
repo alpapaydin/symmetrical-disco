@@ -140,11 +140,14 @@
                             <a href=<?php echo "foto/".$row['ID']."/1.jpg" ?>  rel="lightbox"><img src=<?php echo "foto/".$row['ID']."/1.jpg" ?> alt=""></a>
                             <div class="caption">
                                 <h4 class="pull-right"><?php echo number_format($row['fiyat'],0,',','.'); ?>₺</h4>
-                                <h4><a href=<?php echo "index.php?show=".$row['ID']; ?>><?php echo $row['isim']; ?></a>
+                                <h4><a href=<?php echo "index.php?show=".$row['ID']; ?>><?php echo mb_substr($row['isim'],0,16); 
+                                if (strlen($row['isim'])>16) {
+                                    echo "...";
+                                }  ?></a>
                                 </h4>   
                                 <p>
                                 <?php 
-                                echo substr($row['aciklama'],0,101); 
+                                echo mb_substr($row['aciklama'],0,101); 
                                 if (strlen($row['aciklama'])>101) {
                                     echo "...";
                                 } 
@@ -191,11 +194,14 @@
                             <img src=<?php echo "foto/".$row['ID']."/1.jpg" ?> alt="">
                             <div class="caption">
                                 <h4 class="pull-right"><?php echo number_format($row['fiyat'],0,',','.'); ?>₺</h4>
-                                <h4><a href=<?php echo "index.php?show=".$row['ID']; ?>><?php echo $row['isim']; ?></a>
+                                <h4><a href=<?php echo "index.php?show=".$row['ID']; ?>><?php echo mb_substr($row['isim'],0,29); #captions can be added here
+                                if (strlen($row['isim'])>29) {
+                                    echo "...";
+                                }  ?></a>
                                 </h4>
                                 <p>
                                 <?php 
-                                echo substr($row['aciklama'],0,101); 
+                                echo mb_substr($row['aciklama'],0,101); 
                                 if (strlen($row['aciklama'])>101) {
                                     echo "...";
                                 } 
